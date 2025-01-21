@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Filter Data</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+</head>
+<body>
+    <h1>Filter Data</h1>
+    <form method="post" id="filter-form">
+        {% for column in columns %}
+            <label for="{{column}}">{{ column }}:</label>
+            <input type="text" name="{{column}}" id="{{column}}" value="{{ applied_filters.get(column,'')}}">
+        {% endfor %}
+        <button type="submit">Filter</button>
+    </form>
+    <button onclick="downloadData('csv')">Download CSV</button>
+    <button onclick="downloadData('excel')">Download Excel</button>
+    <button onclick="saveFilters()">Save Filters</button>
+    <button type="button" id="custom-filters-button">Custom Filters</button>
+    <div id="custom-filters-dropdown" style="display: none;">
+        <ul id="saved-filters-list"></ul>
+    </div>
+    <h2>Filtered Data</h2>
+    <table border="1">
+        {% if data %}
+            <tr>
+                {% for key in data[0].keys() %}
+                    <th>{{ key }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in data %}
+                <tr>
+                    {% for value in row.values() %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        {% else %}
+                "No Data Found"
+        {% endif %}
+    </table>
+    
+    <div class="chart">
+        <button onclick="setChartType('bar')">Bars</button>
+        <button onclick="setChartType('line')">Line</button>
+        <button onclick="setChartType('doughnut')">Doughnut</button>
+        <button onclick="setChartType('polarArea')">PolarArea</button>
+        <button onclick="setChartType('radar')">Radar</button>
+        <canvas id="myChart"></canvas>
+    </div>
+      
+      
+    <a href="/">Back to Home</a>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+</body>
+</html>
